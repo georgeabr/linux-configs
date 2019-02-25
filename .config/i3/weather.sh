@@ -11,5 +11,6 @@ do
 done)
 
 # add the line below in your crontab, without the #
-# edit the crontab with crontab -e
+# edit the crontab with crontab -e; cronie can be installed and enabled for this
+# add your user like this as root - echo george /etc/cron.allow
 # */5 * * * * curl -s wttr.in/newcastle-upon-tyne?T | head -n 7 > ~/.weather.cache
