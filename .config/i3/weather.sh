@@ -9,3 +9,6 @@ do
   status=$(cat ~/.weather.cache | head -n 3 | tail -n 1 | cut -c 16-)
   echo ",[{\"full_text\":\"${temp} 🏠 ${status}\",\"color\":\"#c97610\" },${line#,\[}" || exit 1
 done)
+
+# add the line below in your crontab, without the #
+# */5 * * * * curl -s wttr.in/newcastle-upon-tyne?T | head -n 7 > ~/.weather.cache
