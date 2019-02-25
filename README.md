@@ -3,13 +3,10 @@
 The starting point is your home folder (~)
 
 $ git add .
-
 $ git commit -m "first commit"
-
 $ git push -u origin master
 
 single line
-
 $ git add .; git commit -m "first commit"; git push -u origin  master
 
 
@@ -21,4 +18,9 @@ $ xset -b
 - mod+w will put all the windows into a set of tabs
 - mod+s will put all the windows into a stack
 - mod+e will put everything back
+```
+
+**for sway**
+```
+install bemenu
 ```
