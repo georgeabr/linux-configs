@@ -3,6 +3,7 @@
 The starting point is your `home folder (~)`
 - `v1` is for `sway` and `i3`
 - `v2` is for `i3`
+- `config` file for `i3blocks` is `.config/i3blocks/config`
 
 ## Useful software
 
