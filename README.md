@@ -11,7 +11,7 @@ https://www.calcurse.org/
 ## How to clone and commit to this repo
 1. clone the repo
 ```
-git clone https://github.com/georgeabr/linux-configs
+git clone https://github.com/georgeabr/linux-configs; cd linux-configs/
 ```
 2. commit to this repo any modifications made
 
@@ -19,19 +19,19 @@ git clone https://github.com/georgeabr/linux-configs
 $ git add .; git commit -m "modified"; git push -u origin  master
 ```
 
-disable audio bell - the command below in `/etc/profile`  
-```
-$ xset -b
-``` 
-
-**commands for i3**
+## Commands for i3/sway
 ```
 - mod+w will put all the windows into a set of tabs
 - mod+s will put all the windows into a stack
 - mod+e will put everything back
 ```
 
-**for sway**
+## For sway
+1. Alternative to `dmenu`
 ```
 install bemenu
 ```
+2. disable audio bell - the command below in `/etc/profile`  
+```
+$ xset -b
+``` 
