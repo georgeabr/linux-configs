@@ -6,8 +6,9 @@ The starting point is your `home folder (~)`
 
 ## Useful software
 
-- calcurse  
+- `calcurse`, console calendar with todos, reminders  
 https://www.calcurse.org/
+- `hsetroot`, for changing wallpapers, works with `compton/picom`
 ## How to clone and commit to this repo
 1. clone the repo
 ```
