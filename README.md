@@ -16,7 +16,7 @@ git clone https://github.com/georgeabr/linux-configs; cd linux-configs/
 2. commit to this repo any modifications made
 
 ```
-$ git add .; git commit -m "modified"; git push -u origin  master
+$ git add .; git commit -m "modified"; git push -u origin master
 ```
 
 ## Commands for i3/sway
