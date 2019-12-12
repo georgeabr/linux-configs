@@ -15,7 +15,7 @@ $ git add .; git commit -m "first commit"; git push -u origin  master
 ```
 
 disable audio bell - the command below in `/etc/profile`  
-`$ xset -b` 
+```$ xset -b``` 
 
 **commands for i3**
 ```
