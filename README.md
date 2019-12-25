@@ -15,6 +15,12 @@ https://www.calcurse.org/
 ```
 git clone https://github.com/georgeabr/linux-configs; cd linux-configs/
 ```
+
+### To remember git credentials, to save username/password
+```
+git config credential.helper store
+```
+
 2. commit to this repo any modifications made
 
 ```
