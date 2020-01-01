@@ -1,0 +1,8 @@
+! nano .Xresources; xrdb ~/.Xresources
+URxvt.scrollBar: false
+
+URxvt*background: Black
+URxvt*foreground: White
+
+URxvt.font:xft:Roboto Mono:pixelsize=16
+URxvt*geometry: 124x30
