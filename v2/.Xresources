@@ -8,3 +8,6 @@ URxvt.font:xft:Roboto Mono:pixelsize=16
 URxvt*geometry: 124x30
 
 URxvt.searchable-scrollback: Meta-Shift-S
+
+! change with appropriate icon
+URxvt*iconFile: /usr/share/icons/elementary-xfce/apps/128/terminal.svg
