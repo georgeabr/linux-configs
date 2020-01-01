@@ -11,3 +11,9 @@ URxvt.searchable-scrollback: Meta-Shift-S
 
 ! change with appropriate icon
 URxvt*iconFile: /usr/share/icons/elementary-xfce/apps/128/terminal.svg
+
+! copy paste with Ctrl+Alt instead of Ctrl+Shift
+URxvt.iso14755 : false
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+
