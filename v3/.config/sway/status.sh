@@ -81,9 +81,14 @@ function print_status {
   disk_free=$(df -h | awk '$NF == "/" { print $4 }')
   mem_free=$(awk '/MemFree/ { printf "%3.0fK \n", $2/1024 }' /proc/meminfo)
   cpu_load=$(uptime | awk '{print $8}'|sed 's/.$//')
+  # keyboard_layout=$(localectl status|grep Keymap| awk '{print toupper($3)}')
+  # use awk and cut to get keyboard layout
+  # keyboard_layout=$(swaymsg -t get_inputs | jq '.[0].xkb_active_layout_name'|cut -c2-3|awk '{ print toupper($0) }')
+  # use only awk to get the keyboard layout
+  keyboard_layout=$(swaymsg -t get_inputs | jq '.[0].xkb_active_layout_name'|awk '{ print toupper(substr($1,2,2)) }')
   
 #  echo "🖧 $network_info $audio_info 🔋 $battery_info $time_of_day_symbol $date_formatted"
-  echo " $mem_free| $cpu_load | / - $disk_free | 🖧 $network_info| $audio_info | $battery_info | $date_formatted "
+  echo " $mem_free| $cpu_load | / - $disk_free | 🖧 $network_info| $audio_info | $keyboard_layout | $battery_info | $date_formatted "
 }
 
 # The argument to `sleep` is in seconds
