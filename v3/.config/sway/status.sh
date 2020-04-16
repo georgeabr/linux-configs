@@ -83,7 +83,7 @@ function print_status {
   cpu_load=$(uptime | awk '{print $8}'|sed 's/.$//')
   
 #  echo "🖧 $network_info $audio_info 🔋 $battery_info $time_of_day_symbol $date_formatted"
-  echo " $mem_free| $cpu_load | / - $disk_free | 🖧 $network_info| $audio_info | $battery_info | $date_formatted"
+  echo " $mem_free| $cpu_load | / - $disk_free | 🖧 $network_info| $audio_info | $battery_info | $date_formatted "
 }
 
 # The argument to `sleep` is in seconds
