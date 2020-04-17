@@ -50,6 +50,9 @@ bindsym XF86AudioMute exec pactl set-sink-mute $(pacmd list-sinks |awk '/* index
 #show calendar
 bindsym $mod+c exec zenity --calendar
 
+# for screenshots in wayland, use grim, add timestamp to png files
+# bindsym Print exec grim screenshot.png
+bindsym Print exec grim screenshot-$(date "+%Y.%m.%d-%H.%M.%S").png
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
