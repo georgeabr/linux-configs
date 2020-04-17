@@ -56,7 +56,7 @@ function print_status {
   audio_info=$(pactl list sinks | grep Mute | awk -v vol="${volume}" '{print $2=="no"? "🔉 " vol : "🔇 " vol}')
 
   # Emojis and characters for the status bar:
-  # Electricity: ⚡ 🗲 ↯ ⭍ 🔌
+  # Electricity: ⚡ 🗲 ↯ ⭍⭍ 🔌
   # Audio: 🔈 🔊 🎧 🎶 🎵 🎤🕨 🕩 🕪 🕫 🕬  🕭 🎙️🎙
   # Circles: 🔵 🔘 ⚫ ⚪ 🔴 ⭕
   # Time: https://stackoverflow.com/questions/5437674/what-unicode-characters-represent-time
@@ -72,15 +72,15 @@ function print_status {
   # To get signal strength, use iw wlp3s0 link
   # This is empty if we are not connected via WiFi
   ssid=$(iw wlp3s0 info | grep -Po '(?<=ssid ).*')
-  default_gateway=$(ip route show default | awk '{print $3}' | uniq)
+  # default_gateway=$(ip route show default | awk '{print $3}' | uniq)
   private_ip=$(hostname -i)
-  iface=$(ip route show default | awk '{print $5}' | uniq)
-#  network_info="$private_ip→ $default_gateway on $iface $ssid"
+  # iface=$(ip route show default | awk '{print $5}' | uniq)
+  # network_info="$private_ip→ $default_gateway on $iface $ssid"
   network_info="$private_ip"
 
   disk_free=$(df -h | awk '$NF == "/" { print $4 }')
   mem_free=$(awk '/MemFree/ { printf "%3.0fK \n", $2/1024 }' /proc/meminfo)
-  cpu_load=$(uptime | awk '{print $8}'|sed 's/.$//')
+  cpu_load=$(uptime | awk '{print $9}'|sed 's/.$//')
   # keyboard_layout=$(localectl status|grep Keymap| awk '{print toupper($3)}')
   # use awk and cut to get keyboard layout
   # keyboard_layout=$(swaymsg -t get_inputs | jq '.[0].xkb_active_layout_name'|cut -c2-3|awk '{ print toupper($0) }')
@@ -88,7 +88,7 @@ function print_status {
   keyboard_layout=$(swaymsg -t get_inputs | jq '.[0].xkb_active_layout_name'|awk '{ print toupper(substr($1,2,2)) }')
   
 #  echo "🖧 $network_info $audio_info 🔋 $battery_info $time_of_day_symbol $date_formatted"
-  echo " $mem_free| $cpu_load | / - $disk_free | 🖧 $network_info| $audio_info | $keyboard_layout | $battery_info | $date_formatted "
+  echo " $mem_free| ⌛ $cpu_load | 🖴 / - $disk_free | 🖧 $network_info| $audio_info | 🖮 $keyboard_layout | ⚡ $battery_info | $date_formatted "
 }
 
 # The argument to `sleep` is in seconds
