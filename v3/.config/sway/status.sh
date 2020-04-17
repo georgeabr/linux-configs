@@ -18,16 +18,16 @@ function print_status {
   date_formatted=$(date "+%a, %F, %H:%M")
 
   # symbolize the time of day (morning, midday, evening, night)
-  h=$(date "+%H")
-  if (($h>=22 || $h<=5)); then
-    time_of_day_symbol=🌌
-  elif (($h>=17)); then
-    time_of_day_symbol=🌆
-  elif (($h>=11)); then
-    time_of_day_symbol=🌞
-  else
-    time_of_day_symbol=🌄
-  fi
+  # h=$(date "+%H")
+  # if (($h>=22 || $h<=5)); then
+  #    time_of_day_symbol=🌌
+  # elif (($h>=17)); then
+  #    time_of_day_symbol=🌆
+  # elif (($h>=11)); then
+  #    time_of_day_symbol=🌞
+  # else
+  #    time_of_day_symbol=🌄
+  #  fi
   # Sun: 🌅 🌄 ☀️  🌞
   # Moon: 🌙 🌑 🌕 🌝 🌜 🌗 🌘 🌚 🌒 🌔 🌛 🌓 🌖
   # City: 🌇 🌃 🌆
