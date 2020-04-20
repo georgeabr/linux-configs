@@ -82,7 +82,8 @@ function print_status {
   mem_free=$(awk '/MemFree/ { printf "%3.0fK \n", $2/1024 }' /proc/meminfo)
   # cpu_load=$(uptime | awk '{print $8}'|sed 's/.$//')
   # cpu_load=$(uptime | awk '{print $8}'|tr  -d ,)
-  # awk - print antepenultimate column value  <this>
+  # awk - print antepenultimate column value, as uptime output varies
+  #					      <this>
   # 21:58:22 up  6:27,  1 user,  load average: 0.29, 0.74, 0.81
   #							<this>
   # 09:10:18 up 106 days, 32 min, 2 users, load average: 0.22, 0.41, 0.32
