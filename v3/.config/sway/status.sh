@@ -79,7 +79,8 @@ function print_status {
   network_info="$private_ip"
 
   disk_free=$(df -h | awk '$NF == "/" { print $4 }')
-  mem_free=$(awk '/MemFree/ { printf "%3.0fK \n", $2/1024 }' /proc/meminfo)
+  # mem_free=$(awk '/MemFree/ { printf "%3.0fK \n", $2/1024 }' /proc/meminfo)
+  mem_free=$(awk '/MemFree/ { printf "%3.0fM \n", $2/1024 }' /proc/meminfo)
   # cpu_load=$(uptime | awk '{print $8}'|sed 's/.$//')
   # cpu_load=$(uptime | awk '{print $8}'|tr  -d ,)
   # awk - print antepenultimate column value, as uptime output varies
