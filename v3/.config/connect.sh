@@ -40,7 +40,6 @@ connect_wired()
 	sudo dhclient $wifi_device -r
 	sudo dhclient $wired_device -r
 	sudo killall wpa_supplicant
-	# sudo -b wpa_supplicant -c /etc/wpa_supplicant.conf -i $wifi_device
 	sudo dhclient $wired_device
 	printf "\n"
 }
