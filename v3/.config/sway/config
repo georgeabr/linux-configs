@@ -71,7 +71,10 @@ font pango:Roboto Mono 11
 # X core fonts rendering does not support right-to-left and this being a bitmap
 # font, it doesn’t scale on retina/hidpi displays.
 
-#Startup applications??
+#Startup applications
+# git clone the below redshift, for wayland support
+# https://github.com/minus7/redshift/tree/wayland
+
 #exec redshift -r -t 3700:3400
 exec --no-startup-id redshift -t 3700:3500 -r -l 54.97:1.61 -m wayland
 # numlockx does not work in Wayland, use "xkb_numlock on" in the input section
