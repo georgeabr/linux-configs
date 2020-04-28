@@ -75,6 +75,14 @@ font pango:Roboto Mono 11
 # git clone the below redshift, for wayland support
 # https://github.com/minus7/redshift/tree/wayland
 
+
+# exec swayidle -w                                                 \
+#    timeout 120  'swaylock'                                      \
+#    timeout  20  'pgrep swaylock && swaymsg "output * dpms off"' \
+#         resume  'swaymsg "output * dpms on"'                    \
+#    before-sleep 'swaylock'
+
+
 #exec redshift -r -t 3700:3400
 exec --no-startup-id redshift -t 3700:3500 -r -l 54.97:1.61 -m wayland
 # numlockx does not work in Wayland, use "xkb_numlock on" in the input section
@@ -95,6 +103,9 @@ bindsym $mod+q kill
 # bindsym $mod+d exec dmenu_run
 # or use bemenu, made for Wayland
 bindsym $mod+d exec bemenu-run --fn 'Roboto Mono Bold 12' --hf '#99935e' -p "which command " --tf '#ffffff'
+# bindsym $mod+g exec swaymsg \[con_id=$(swaymsg -t get_tree | jq -r '.nodes | .[] | .nodes | . [] | select(.nodes != null) | .nodes | .[] | select(.name != null) | "\(.id?) \(.name?)"' | wofi -dmenu -i | awk '{print $1}')] focus
+bindsym $mod+g exec /home/george/select-window-new.sh
+
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
