@@ -11,6 +11,10 @@ font:
 # All the color setting are under the "color" section.
 colors:
  
+  primary:
+#    background: '#232627'
+    foreground: '#d0d3d4'
+
   # Normal colors
   normal:
     black:   '0x000000'
@@ -20,7 +24,7 @@ colors:
     blue:    '0x2222BB'
     magenta: '0xBB22BB'
     cyan:    '0x22BBBB'
-    white:   '0xc8c8c8'
+    white:   '0xd0d3d4'
  
   # Bright colors
   bright:
@@ -31,4 +35,4 @@ colors:
     blue:    '0x2222FF'
     magenta: '0xFF22FF'
     cyan:    '0x22FFFF'
-    white:   '0xc8c8c8'
+    white:   '0xd0d3d4'
