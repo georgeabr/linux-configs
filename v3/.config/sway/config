@@ -88,7 +88,8 @@ font pango:Roboto Mono 11
 
 
 #exec redshift -r -t 3700:3400
-exec --no-startup-id redshift -t 3700:3500 -r -l 54.97:1.61 -m wayland
+exec --no-startup-id gammastep -t 3700:3500 -r -l 54.97:1.61 -m wayland
+exec --no-startup-id kanshi
 # numlockx does not work in Wayland, use "xkb_numlock on" in the input section
 # exec --no-startup-id numlockx on
 
@@ -209,7 +210,7 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit SWAY? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 # bindsym $mod+Shift+e exec "swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your X session.' -B 'Yes, exit sway' 'swaymsg exit'"
-bindsym $mod+Shift+e exec "swaynag  --font 'DejaVu Serif 16' --background ccbd89 -t warning -m 'Do you wish to leave or reload sway?' -B 'Do nothing' 'killall swaynag' -B 'Reload sway' 'swaymsg reload; killall swaynag' -B 'Yes, leave sway' 'swaymsg exit'"
+bindsym $mod+Shift+e exec "swaynag  --font 'DejaVu Serif 16' --background ccbd89 -t warning -m 'Do you wish to leave or reload sway, or suspend the laptop?' -B 'Do nothing' 'killall swaynag' -B 'Suspend laptop' 'systemctl suspend; killall swaynag; killall kanshi; kanshi' -B 'Reload sway' 'swaymsg reload; killall swaynag' -B 'Yes, leave sway' 'swaymsg exit'"
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
