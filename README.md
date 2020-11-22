@@ -22,6 +22,12 @@ git clone https://github.com/georgeabr/linux-configs; cd linux-configs/
 git config credential.helper store
 ```
 
+### To configure identity, required by git
+```
+git config --global user.email "your email"
+git config --global user.name "georgeabr"
+```
+
 2. commit to this repo any modifications made
 
 ```
