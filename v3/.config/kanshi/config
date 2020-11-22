@@ -1,3 +1,5 @@
+# swaymsg -t get_outputs
+
 profile {
     output eDP-1 enable
 }
