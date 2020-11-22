@@ -35,7 +35,7 @@ seat seat0 xcursor_theme $my_cursor_theme $my_cursor_size
 exec_always {
     gsettings set org.gnome.desktop.interface cursor-theme $my_cursor_theme
     gsettings set org.gnome.desktop.interface cursor-size $my_cursor_size
-    /usr/lib/polkit-kde-authentication-agent-1
+#    /usr/lib/polkit-kde-authentication-agent-1
 }
 
 
@@ -109,7 +109,7 @@ bindsym $mod+q kill
 # or use bemenu, made for Wayland
 bindsym $mod+d exec bemenu-run --fn 'Roboto Mono Bold 12' --hf '#99935e' -p "which command " --tf '#ffffff'
 # bindsym $mod+g exec swaymsg \[con_id=$(swaymsg -t get_tree | jq -r '.nodes | .[] | .nodes | . [] | select(.nodes != null) | .nodes | .[] | select(.name != null) | "\(.id?) \(.name?)"' | wofi -dmenu -i | awk '{print $1}')] focus
-bindsym $mod+g exec /home/george/select-window-new.sh
+bindsym $mod+g exec /home/george/.config/select-window-new.sh
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
