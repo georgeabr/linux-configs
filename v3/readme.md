@@ -11,3 +11,8 @@ kanshi
 kitty
 jq
 ```
+
+### Useful shortcuts
+
+ - `mod+g` - show list of open windows  
+ 
