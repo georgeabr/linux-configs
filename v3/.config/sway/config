@@ -16,6 +16,10 @@ input type:keyboard {
     xkb_options grp:alt_shift_toggle
 }
 
+
+# grayscale antialiasing for sway bars
+output * subpixel none
+
 set $mod Mod4
 
 # class                 border  bground text    indicator child_border
