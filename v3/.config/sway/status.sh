@@ -15,7 +15,7 @@ function print_status {
   # The abbreviated weekday (e.g., "Sat"), followed by the ISO-formatted
   # date like 2018-10-06 and the time (e.g., 14:01). Check `man date`
   # on how to format time and date.
-  date_formatted=$(date "+%a, %F, %H:%M")
+  date_formatted=$(date "+%a, %e %b, %H:%M")
 
   # symbolize the time of day (morning, midday, evening, night)
   # h=$(date "+%H")
@@ -93,8 +93,8 @@ function print_status {
   # use awk and cut to get keyboard layout
   # keyboard_layout=$(swaymsg -t get_inputs | jq '.[0].xkb_active_layout_name'|cut -c2-3|awk '{ print toupper($0) }')
   # use only awk to get the keyboard layout
-  keyboard_layout=$(swaymsg -t get_inputs | jq '.[2].xkb_active_layout_name'|awk '{ print toupper(substr($1,2,2)) }')
-  
+  # keyboard_layout=$(swaymsg -t get_inputs | jq '.[2].xkb_active_layout_name'|awk '{ print toupper(substr($1,2,2)) }')
+  keyboard_layout=$(swaymsg -t get_inputs | jq -r '.[] | select(.identifier == "1:1:AT_Translated_Set_2_keyboard") | .xkb_active_layout_name')
 #  echo "🖧 $network_info $audio_info 🔋 $battery_info $time_of_day_symbol $date_formatted"
   echo " $mem_free| ⌛ $cpu_load | 🖴 / - $disk_free | 🖧 $network_info| $audio_info | 🖮 $keyboard_layout | ⚡ $battery_info | $date_formatted "
 }
