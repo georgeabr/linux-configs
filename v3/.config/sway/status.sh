@@ -73,6 +73,8 @@ function print_status {
   # This is empty if we are not connected via WiFi
   # ssid=$(iw wlp3s0 info | grep -Po '(?<=ssid ).*')
   # default_gateway=$(ip route show default | awk '{print $3}' | uniq)
+  
+  # install inetutils in arch first
   private_ip=$(hostname -i)
   # iface=$(ip route show default | awk '{print $5}' | uniq)
   # network_info="$private_ip→ $default_gateway on $iface $ssid"
