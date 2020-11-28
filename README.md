@@ -8,6 +8,8 @@ The starting point is your `home folder (~)`
 - `config` file for `i3blocks` is `.config/i3blocks/config`
 
 ## Software needed for `i3`
+- for Ubuntu LTS, use the repositories below:  
+https://i3wm.org/docs/repositories.html
 - a new version of `i3blocks` - compile it; version for Debian and Ubuntu is from 2015  
 - `redshift`, `dmenu`, `udiskie`, `hsetroot`, `picom`, `kitty`
 
