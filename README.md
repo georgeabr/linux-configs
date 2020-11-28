@@ -11,7 +11,8 @@ The starting point is your `home folder (~)`
 - for Ubuntu LTS, use the repositories below:  
 https://i3wm.org/docs/repositories.html
 - a new version of `i3blocks` - compile it; version for Debian and Ubuntu is from 2015  
-- `redshift`, `dmenu`, `udiskie`, `hsetroot`, `picom`, `kitty`
+- `redshift`, `dmenu`, `udiskie`, `hsetroot`, `kitty`, `picom`  
+https://launchpad.net/~regolith-linux/+archive/ubuntu/release?field.series_filter=focal  
 
 ## Useful software
 
