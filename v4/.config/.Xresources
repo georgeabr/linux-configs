@@ -1,0 +1,35 @@
+! nano .Xresources; xrdb ~/.Xresources
+URxvt.scrollBar: false
+
+URxvt*background: Black
+URxvt*foreground: White
+
+URxvt.font:xft:Roboto Mono:pixelsize=16
+URxvt*geometry: 124x30
+
+URxvt.searchable-scrollback: Meta-Shift-S
+
+! change with appropriate icon
+URxvt*iconFile: /usr/share/icons/elementary-xfce/apps/128/terminal.svg
+
+! copy paste with Ctrl+Alt instead of Ctrl+Shift
+URxvt.iso14755 : false
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+
+! if you want tabs, use this - https://github.com/gryf/tabbed
+! put the file "tabbed" in ~/.urxvt/ext
+
+! Perl extension config
+! URxvt.perl-ext: tabbed
+
+! shortcuts
+!    Ctrl+Shift+N to add a new tab
+!    Shift + Right / Shift + Left to focus the next/previous tab
+!    Shift + Up to rename the current tab
+!    Control + Right / Control + Left to move a tab
+
+! Use Ctrl+Shift+N
+URxvt.tabbed.disable-shift-down: true
+! disable [NEW] button
+URxvt.tabbed.new-button: false

@@ -1,0 +1,6 @@
+set linenumbers
+set constantshow
+set softwrap
+set titlecolor white,black
+set numbercolor white,black
+set showcursor
