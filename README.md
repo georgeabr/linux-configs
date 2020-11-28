@@ -15,7 +15,8 @@ https://i3wm.org/docs/repositories.html
 https://launchpad.net/~regolith-linux/+archive/ubuntu/release?field.series_filter=focal  
 
 ## Useful software
-
+- nice mouse cursors  
+https://gitlab.com/Enthymeme/hackneyed-x11-cursors
 - `calcurse`, console calendar with todos, reminders  
 https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
