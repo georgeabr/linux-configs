@@ -23,6 +23,7 @@ https://www.calcurse.org/
 
 ## Commands for `i3`/`sway`
 - `mod+shift+e` - show nag system menu (suspend, leave session) - (no keyboard interactioon)
+- `mod+q` - close a window
 - `mod+w` will put all the windows into a set of tabs
 - `mod+s` will put all the windows into a stack
 - `mod+e` will put everything back
