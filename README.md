@@ -22,7 +22,7 @@ https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
 
 ## Useful shortcuts for `i3`
-- `Win+F11` -  show system menu (lock, logout, suspend, reboot, shutdown)  
+- `mod+f11` -  show system menu (lock, logout, suspend, reboot, shutdown)  
 
 ## How to clone and commit to this repo
 1. clone the repo
@@ -48,11 +48,10 @@ $ git add .; git commit -m "modified"; git push -u origin master
 ```
 
 ## Commands for i3/sway
-```
-- mod+w will put all the windows into a set of tabs
-- mod+s will put all the windows into a stack
-- mod+e will put everything back
-```
+
+- `mod+w` will put all the windows into a set of tabs
+- `mod+s` will put all the windows into a stack
+- `mod+e` will put everything back
 
 ## For sway
 1. Alternative to `dmenu`
