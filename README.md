@@ -22,7 +22,7 @@ https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
 
 ## Useful shortcuts for `i3`
-- `Win+F11` -  show system menu (suspend, shutdown)  
+- `Win+F11` -  show system menu (lock, logout, suspend, reboot, shutdown)  
 
 ## How to clone and commit to this repo
 1. clone the repo
