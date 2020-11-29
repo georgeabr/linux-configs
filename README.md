@@ -21,6 +21,10 @@ https://gitlab.com/Enthymeme/hackneyed-x11-cursors
 https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
 
+## Commands for i3/sway
+- `mod+w` will put all the windows into a set of tabs
+- `mod+s` will put all the windows into a stack
+- `mod+e` will put everything back
 ## Useful shortcuts for `i3`
 - `mod+f11` -  show system menu (lock, logout, suspend, reboot, shutdown)  
 
@@ -46,13 +50,6 @@ git config --global user.name "georgeabr"
 ```
 $ git add .; git commit -m "modified"; git push -u origin master
 ```
-
-## Commands for i3/sway
-
-- `mod+w` will put all the windows into a set of tabs
-- `mod+s` will put all the windows into a stack
-- `mod+e` will put everything back
-
 ## For sway
 1. Alternative to `dmenu`
 ```
