@@ -231,7 +231,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -B 'Suspend laptop' 'systemctl suspend; killall i3-nagbar; killall autorandr; autorandr -c;' -B 'Yes, exit i3' 'killall picom; killall redshift; i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar --font 'pango:Roboto Mono Regular 12' -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -B 'Suspend laptop' 'systemctl suspend; killall i3-nagbar; killall autorandr; autorandr -c;' -B 'Yes, exit i3' 'killall picom; killall redshift; i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
