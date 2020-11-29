@@ -92,8 +92,9 @@ set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) re
 mode "$mode_system" {
     bindsym l exec --no-startup-id $Locker, mode "default"
 #   bindsym e exec --no-startup-id i3-msg exit, mode "default"
-    bindsym e exec --no-startup-id /home/george/./why-redshift.sh
-    bindsym s exec --no-startup-id $Locker && systemctl suspend, mode "default"
+    bindsym e exec --no-startup-id "killall redshift; killall udiskie; killall picom; i3-msg exit"
+#   bindsym e exec --no-startup-id /home/george/./why-redshift.sh
+    bindsym s exec --no-startup-id "$Locker; systemctl suspend; killall autorandr; autorandr -c"
     bindsym h exec --no-startup-id $Locker && systemctl hibernate, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
