@@ -21,7 +21,7 @@ https://gitlab.com/Enthymeme/hackneyed-x11-cursors
 https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
 
-## Useful shortcuts
+## Useful shortcuts for `i3`
 - `Win+F11` -  show system menu (suspend, shutdown)  
 
 ## How to clone and commit to this repo
