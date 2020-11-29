@@ -21,7 +21,8 @@ https://gitlab.com/Enthymeme/hackneyed-x11-cursors
 https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
 
-## Commands for i3/sway
+## Commands for `i3`/`sway`
+- `mod+shift+e` - show nag system menu (suspend, leave session) - (no keyboard interactioon)
 - `mod+w` will put all the windows into a set of tabs
 - `mod+s` will put all the windows into a stack
 - `mod+e` will put everything back
