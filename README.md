@@ -5,7 +5,7 @@ The starting point is your `home folder (~)`
 - `v2` is for `i3`
 - `v3` is for `sway`, using `swaybar`
 - `v4` is for `i3` and `sway`
-- `config` file for `i3blocks` is `.config/i3blocks/config`
+  - `config` file for `i3blocks` is `.config/i3blocks/config`
 
 ## Software needed for `i3`
 - for Ubuntu LTS, use the repositories below:  
