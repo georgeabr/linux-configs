@@ -20,6 +20,10 @@ https://gitlab.com/Enthymeme/hackneyed-x11-cursors
 - `calcurse`, console calendar with todos, reminders  
 https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
+
+## Useful shortcuts
+- `Win+F11` -  show system menu (suspend, shutdown)  
+
 ## How to clone and commit to this repo
 1. clone the repo
 ```
