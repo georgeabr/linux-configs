@@ -22,6 +22,7 @@ https://www.calcurse.org/
 - `hsetroot`, for changing wallpapers, works with `compton/picom`
 
 ## Useful shortcuts for `i3`/`sway`
+- `mod+[0..9]` - switch to desktop `[0..9]`  
 - `mod+shift+e` - show nag system menu (suspend, leave session) - (no keyboard interactioon)
 - `mod+q` - close active window
 - `mod+w` - will put all the windows into a set of tabs
