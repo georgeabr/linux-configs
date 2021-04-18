@@ -15,7 +15,7 @@ https://i3wm.org/docs/repositories.html
 https://launchpad.net/~regolith-linux/+archive/ubuntu/release?field.series_filter=focal  
 
 ## Software needed for `sway`
-- `kanshi`, `gammastep`, `playerctl`, `grim`
+- `kanshi`, `gammastep`, `playerctl`, `grim`, `kitty`
 
 ## Useful software
 - nice mouse cursors  
