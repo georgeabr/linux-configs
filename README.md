@@ -26,7 +26,7 @@ https://www.calcurse.org/
 
 ## Useful shortcuts for `i3`/`sway`
 - `mod+[0..9]` - switch to desktop `[0..9]`  
-- `mod+shift+e` - show nag system menu (suspend, leave session) - (no keyboard interactioon)
+- `mod+shift+e` - show nag system menu (suspend, leave session) - (no keyboard interaction)
 - `mod+q` - close active window
 - `mod+w` - will put all the windows into a set of tabs
 - `mod+s` - will put all the windows into a stack
