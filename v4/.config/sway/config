@@ -86,6 +86,8 @@ font pango:Roboto Mono 11
 # git clone the below redshift, for wayland support
 # https://github.com/minus7/redshift/tree/wayland
 
+# https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
 # exec swayidle -w                                                 \
 #    timeout 120  'swaylock'                                      \
