@@ -52,8 +52,9 @@ function print_status {
   # battery_info="$(cat /sys/class/power_supply/BAT0/status) $(cat /sys/class/power_supply/BAT0/capacity)%"
 
   # Get volume and mute status with PulseAudio
-  volume=$(pactl list sinks | grep Volume | head -n1 | awk '{print $5}')
-  audio_info=$(pactl list sinks | grep Mute | awk -v vol="${volume}" '{print $2=="no"? "🔉 " vol : "🔇 " vol}')
+  volume=$(pactl list sinks | grep Volume | tail -n2 | head -n1 | awk '{print $5}')
+  audio_info=$(pactl list sinks | grep Mute |tail -n1 | awk -v vol="${volume}" '{print $2=="no"? "🔉 " vol : "🔇 " vol}')
+#  audio_info=$(pactl list sinks | grep Mute | awk -v vol="${volume}" '{print $2=="no"? "🔉 " vol : "🔇 " vol}')
 
   # Emojis and characters for the status bar:
   # Electricity: ⚡ 🗲 ↯ ⭍⭍ 🔌
