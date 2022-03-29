@@ -97,13 +97,15 @@ exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSO
 
 
 #exec redshift -r -t 3700:3400
-exec --no-startup-id gammastep -t 3700:3500 -r -l 54.97:1.61 -m wayland
+exec --no-startup-id gammastep -t 3800:3800 -r -l 54.97:1.61 -m wayland
 exec --no-startup-id kanshi
 # numlockx does not work in Wayland, use "xkb_numlock on" in the input section
 # exec --no-startup-id numlockx on
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
+
+for_window [class="zoom "] floating enable
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
