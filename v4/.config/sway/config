@@ -108,6 +108,7 @@ floating_modifier $mod
 # swaymsg -t get_tree
 # class works for xwayland apps
 for_window [class="zoom "] floating enable
+for_window [class="Microsoft Teams - Insiders"] floating enable
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
