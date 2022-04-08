@@ -24,12 +24,22 @@ set $mod Mod4
 
 # class                 border  bground text    indicator child_border
 # client.focused          #99935E #251A10 #d1d1d1 #251A10   #251A10
-client.focused          #392819 #444444 #d1d1d1 #251A10   #444444
-client.focused_inactive #333333 #393939 #d1d1d1 #484E50   #393939
+client.focused          #1a1a1a #404040 #d1d1d1 #251A10   #444444
+client.focused_inactive #333333 #262626 #d1d1d1 #484E50   #393939
 # client.unfocused        #333333 #222222 #888888 #292D2E   #222222
-client.unfocused        #333333 #262626 #adadad #292D2E   #222222
+client.unfocused        #262626 #1a1a1a #adadad #292D2E   #222222
 client.urgent           #2F343A #900000 #FFFFFF #900000   #900000
 client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
+
+# old color config scheme below
+# class                 border  bground text    indicator child_border
+# client.focused          #99935E #251A10 #d1d1d1 #251A10   #251A10
+# client.focused          #392819 #251A10 #d1d1d1 #251A10   #251A10
+# client.focused_inactive #333333 #5F676A #d1d1d1 #484E50   #5F676A
+# client.unfocused        #333333 #222222 #888888 #292D2E   #222222
+# client.unfocused        #333333 #100a05 #888888 #292D2E   #222222
+# client.urgent           #2F343A #900000 #FFFFFF #900000   #900000
+# client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
 
 client.background       #FFFFFF
 
@@ -257,7 +267,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
   colors {
-    background #000000
+    background #1A1A1A
     statusline #FFFFFF
     separator  #666666
 
