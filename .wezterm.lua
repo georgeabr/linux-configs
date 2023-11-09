@@ -15,7 +15,8 @@ return {
         color_scheme = 'Builtin Dark',
         default_cursor_style = 'SteadyUnderline',
         window_decorations = "NONE",
-        font = wezterm.font 'IBM Plex Mono', font_size = 14,
+        -- font = wezterm.font 'IBM Plex Mono', font_size = 14,
+        font = wezterm.font 'Noto Sans Mono', font_size = 14,
 
 
     keys = {
