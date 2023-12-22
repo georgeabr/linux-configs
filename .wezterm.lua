@@ -12,6 +12,7 @@ end)
 
 return {
         check_for_updates = false,
+        hide_tab_bar_if_only_one_tab = true,
         color_scheme = 'Builtin Dark',
         default_cursor_style = 'SteadyUnderline',
         window_decorations = "NONE",
@@ -20,8 +21,8 @@ return {
 
 
     keys = {
-        { key = '"', mods = "CTRL|SHIFT|ALT", action=wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' }},
-        { key = '%', mods = "CTRL|SHIFT|ALT",action=wezterm.action.SplitHorizontal{args={'bash'}}},
+        { key = '"', mods = "CTRL|SHIFT", action=wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' }},
+        { key = '%', mods = "CTRL|SHIFT",action=wezterm.action.SplitHorizontal{args={'bash'}}},
     },
 
         window_frame = {
