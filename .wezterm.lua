@@ -3,9 +3,11 @@ local wezterm = require 'wezterm'
 
 local mux = wezterm.mux
 
-wezterm.on("gui-startup", function(cmd)
-  local tab, pane, window = mux.spawn_window(cmd or {})
-  window:gui_window():maximize()
+--wezterm.on("gui-startup", function(cmd)
+wezterm.on("gui-startup", function()
+--  local tab, pane, window = mux.spawn_window(cmd or {})
+  local tab, pane, window = mux.spawn_window{}
+    window:gui_window():maximize()
 end)
 
 -- a comment here
@@ -13,11 +15,39 @@ end)
 return {
         check_for_updates = false,
         hide_tab_bar_if_only_one_tab = true,
-        color_scheme = 'Builtin Dark',
+--        color_scheme = 'Builtin Dark',
+--      color_scheme = 'Muse (terminal.sexy)',
+        colors = {
+                foreground = 'silver',
+-- The default background color
+                background = 'black',
+                cursor_fg = 'black',
+                cursor_bg = 'silver',
+                  ansi = {
+                    'black',
+                    'maroon',
+                    'green',
+                    'olive',
+                    'navy',
+                    'purple',
+                    'teal',
+                    'silver',
+                  },
+                  brights = {
+                    'grey',
+                    'red',
+                    'silver',
+                    'yellow',
+                    'dimgray',
+                    'fuchsia',
+                    'cornflowerblue',
+                    'silver'
+                  },
+        },
         default_cursor_style = 'SteadyUnderline',
         window_decorations = "NONE",
-        -- font = wezterm.font 'IBM Plex Mono', font_size = 14,
-        font = wezterm.font 'Noto Sans Mono', font_size = 14,
+          font = wezterm.font 'IBM Plex Mono', font_size = 12,
+ --       font = wezterm.font 'SF Mono', font_size = 12,
 
 
     keys = {
@@ -36,6 +66,13 @@ return {
                 button_bg = '#2b2042',
                 button_hover_fg = '#ffffff',
                 button_hover_bg = '#3b3052',
+        },
+
+        font_rules = {
+                {
+                    intensity = "Bold",
+                    font = wezterm.font({ family = "IBM Plex Mono", weight = "Regular" }),
+                },
         },
 
 }
