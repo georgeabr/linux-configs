@@ -19,15 +19,18 @@ input type:keyboard {
 
 # grayscale antialiasing for sway bars
 output * subpixel none
+output * bg #131313 solid_color
+output eDP-1 disable
 
 set $mod Mod4
 
 # class                 border  bground text    indicator child_border
 # client.focused          #99935E #251A10 #d1d1d1 #251A10   #251A10
-client.focused          #1a1a1a #333333 #d1d1d1 #292D2E   #444444
+# client.focused          #1a1a1a #333333 #d1d1d1 #292D2E   #444444
+client.focused          #1a1a1a #000000 #ffffff #292D2E   #444444
 client.focused_inactive #333333 #262626 #d1d1d1 #484E50   #393939
 # client.unfocused        #333333 #222222 #888888 #292D2E   #222222
-client.unfocused        #262626 #1a1a1a #adadad #292D2E   #222222
+client.unfocused        #1a1a1a #000000 #adadad #292D2E   #222222
 client.urgent           #2F343A #900000 #FFFFFF #900000   #900000
 client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
 
@@ -46,17 +49,21 @@ client.background       #FFFFFF
 set $my_cursor_size 36
 set $my_cursor_theme Adwaita
 # set $my_cursor_theme Hackneyed-Dark-36
-# seat seat0 xcursor_theme $my_cursor_theme $my_cursor_size
-seat seat0 xcursor_theme $my_cursor_theme
+seat seat0 xcursor_theme $my_cursor_theme $my_cursor_size
+# seat seat0 xcursor_theme $my_cursor_theme
 exec_always {
     gsettings set org.gnome.desktop.interface cursor-theme $my_cursor_theme
-#    gsettings set org.gnome.desktop.interface cursor-size $my_cursor_size
+    gsettings set org.gnome.desktop.interface cursor-size $my_cursor_size
     gsettings set org.gnome.desktop.interface cursor-blink false
+#    killall kanshi; kanshi
 #    /usr/lib/polkit-kde-authentication-agent-1
+#for VirtualBox to use the dark theme
+#    /usr/libexec/gsd-xsettings
 }
 
+# exec --no-startup-id /usr/libexec/gsd-xsettings
 
-exec swayidle timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
+# exec swayidle timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 #        before-sleep 'swaylock -c 000000'
 
 # audio volume for i3 status
@@ -82,14 +89,22 @@ bindsym $mod+c exec zenity --calendar
 # bindsym Print exec grim screenshot.png
 # bindsym Print exec grim screenshot-$(date "+%Y.%m.%d-%H.%M.%S").png
 
-# Font for window titles. Will also be used by the bar unless a different font
+# #Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 #font pango:monospace 8
-#font pango:Droid Sans Mono 10
+font pango:SF Mono 9
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:Roboto Mono 11
+#font pango:IBM Plex Mono 8
+
+# for_window [app_id=all] move workspace prev
+titlebar_padding 1 1
+# default_border none
+gaps outer 0
+gaps inner 0
+hide_edge_borders --i3 smart
+workspace_layout tabbed
 
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -104,7 +119,8 @@ font pango:Roboto Mono 11
 
 # https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
-
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY=wayland-1 XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment DISPLAY
 # exec swayidle -w                                                 \
 #    timeout 120  'swaylock'                                      \
 #    timeout  20  'pgrep swaylock && swaymsg "output * dpms off"' \
@@ -114,7 +130,7 @@ exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSO
 
 #exec redshift -r -t 3700:3400
 # exec --no-startup-id gammastep -t 3800:3800 -r -l 54.97:1.61 -m wayland
-exec --no-startup-id kanshi
+# exec --no-startup-id kanshi
 # numlockx does not work in Wayland, use "xkb_numlock on" in the input section
 # exec --no-startup-id numlockx on
 
@@ -123,30 +139,35 @@ floating_modifier $mod
 
 # swaymsg -t get_tree
 # class works for xwayland apps
-for_window [class="zoom "] floating enable
-for_window [class="Perimeter81"] floating disable
-for_window [class="Microsoft Teams - Insiders"] floating enable
+# for_window [class="zoom "] floating enable
+# for_window [class="Microsoft Teams - Insiders"] floating enable
+# for_window [app_id=*] titlebar hide
+
+# wayland vesion
+for_window [app_id="firefox"] inhibit_idle fullscreen
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec kitty
+bindsym $mod+Return exec wezterm
 
 # kill focused window
 #bindsym $mod+Shift+q kill
 bindsym $mod+q kill
 
 # you need grim, wl-copy, grimshot
-bindsym $mod+Shift+Print exec wl-copy < $(grimshot save area "$(xdg-user-dir)/OneDrive/Pictures/Screenshots/Screenshot_$(date +%Y%m%d_%H%M%S).png")
+bindsym $mod+Shift+Print exec wl-copy < $(grimshot save area "$(xdg-user-dir)/Pictures/Screenshots/Screenshot_$(date +%Y%m%d_%H%M%S).png")
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+# bindsym $mod+d exec dmenu_run -fn 'Noto Mono-11'
+bindsym $mod+d exec wofi --show drun
+# or use bemenu, made for Wayland
 # or use bemenu, made for Wayland
 # bindsym $mod+d exec bemenu-run --fn 'Roboto Mono Bold 12' --hf '#99935e' -p "which command " --tf '#ffffff'
 # bindsym $mod+g exec swaymsg \[con_id=$(swaymsg -t get_tree | jq -r '.nodes | .[] | .nodes | . [] | select(.nodes != null) | .nodes | .[] | select(.name != null) | "\(.id?) \(.name?)"' | wofi -dmenu -i | awk '{print $1}')] focus
 # bindsym $mod+g exec /home/george/.config/select-window-new.sh
 
 # show windows list and select
-bindsym $mod+g exec python $(xdg-user-dir)/show-windows.py
+bindsym $mod+g exec python3 $(xdg-user-dir)/show-windows.py
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -225,8 +246,8 @@ bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
-#bindsym $mod+9 workspace $ws9
-#bindsym $mod+0 workspace $ws10
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
@@ -237,8 +258,8 @@ bindsym $mod+Shift+5 move container to workspace $ws5
 bindsym $mod+Shift+6 move container to workspace $ws6
 bindsym $mod+Shift+7 move container to workspace $ws7
 bindsym $mod+Shift+8 move container to workspace $ws8
-#bindsym $mod+Shift+9 move container to workspace $ws9
-#bindsym $mod+Shift+0 move container to workspace $ws10
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -247,7 +268,7 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit SWAY? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 # bindsym $mod+Shift+e exec "swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your X session.' -B 'Yes, exit sway' 'swaymsg exit'"
-bindsym $mod+Shift+e exec "swaynag  --font 'DejaVu Serif 16' --background ccbd89 -t warning -m 'Do you wish to leave or reload sway, or suspend the laptop?' -B 'Do nothing' 'killall swaynag' -B 'Suspend laptop' 'systemctl suspend; killall swaynag; killall kanshi; kanshi' -B 'Reload sway' 'swaymsg reload; killall swaynag' -B 'Yes, leave sway' 'swaymsg exit'"
+bindsym $mod+Shift+e exec "swaynag  --font 'DejaVu Serif 16' --background ccbd89 -t warning -m 'Do you wish to leave or reload sway, or suspend the laptop?' -B 'Do nothing' 'killall swaynag' -B 'Suspend laptop' 'systemctl suspend; killall swaynag;' -B 'Reload sway' 'swaymsg reload; killall swaynag' -B 'Yes, leave sway' 'swaymsg exit'"
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -280,8 +301,12 @@ bindsym $mod+r mode "resize"
 bar {
   colors {
     background #1A1A1A
+    background #000000
     statusline #FFFFFF
     separator  #666666
+    height 16
+    mode hide
+    position top
 
 #    focused_workspace  #99935E #251A10 #FFFFFF
     focused_workspace  #333333 #333333 #FFFFFF
