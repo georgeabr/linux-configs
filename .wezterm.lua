@@ -74,6 +74,7 @@ return {
   		{
 		intensity = "Bold",
 		font = wezterm.font({ family = "Iosevka Extended", weight = "Regular"}),
+--		font = wezterm.font({ family = "Noto Sans Mono", weight = "Regular" }),
 --		font = wezterm.font({ family = "IBM Plex Mono", weight = "Regular" }),
 		 -- font = wezterm.font({ family = "PragmataPro", weight = "Regular" }),
 		-- font = wezterm.font({ family = "SF Mono", weight = "Regular" }),
