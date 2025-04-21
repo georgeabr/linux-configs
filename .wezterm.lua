@@ -50,10 +50,10 @@ return {
 	},
         default_cursor_style = 'SteadyUnderline',
         window_decorations = "NONE",
-		font = wezterm.font 'Iosevka Extended', font_size = 12,
+--		font = wezterm.font 'Iosevka Extended', font_size = 12,
        		-- font = wezterm.font 'Pragmata Pro', font_size = 13,
 		-- font = wezterm.font 'SF Mono', font_size = 12,
-		-- font = wezterm.font 'Noto Sans Mono', font_size = 12,
+		font = wezterm.font 'Noto Sans Mono', font_size = 13,
 
 
     keys = {
@@ -77,8 +77,8 @@ return {
 	font_rules = {
   		{
 		intensity = "Bold",
-		font = wezterm.font({ family = "Iosevka Extended", weight = "Regular"}),
---		font = wezterm.font({ family = "Noto Sans Mono", weight = "Regular" }),
+--		font = wezterm.font({ family = "Iosevka Extended", weight = "Regular"}),
+		font = wezterm.font({ family = "Noto Sans Mono", weight = "Regular" }),
 --		font = wezterm.font({ family = "IBM Plex Mono", weight = "Regular" }),
 		 -- font = wezterm.font({ family = "PragmataPro", weight = "Regular" }),
 		-- font = wezterm.font({ family = "SF Mono", weight = "Regular" }),
