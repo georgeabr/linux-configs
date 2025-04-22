@@ -52,6 +52,7 @@ return {
         window_decorations = "NONE",
 --		font = wezterm.font 'Iosevka Extended', font_size = 12,
        		-- font = wezterm.font 'Pragmata Pro', font_size = 13,
+                -- font = wezterm.font 'Cousine Nerd Font', font_size = 13,
 		-- font = wezterm.font 'SF Mono', font_size = 12,
 		font = wezterm.font 'Noto Sans Mono', font_size = 13,
 
@@ -83,6 +84,7 @@ return {
 		 -- font = wezterm.font({ family = "PragmataPro", weight = "Regular" }),
 		-- font = wezterm.font({ family = "SF Mono", weight = "Regular" }),
 		-- font = wezterm.font({ family = "Noto Sans Mono", weight = "Regular" }),
+		-- font = wezterm.font({ family = "Cousine Nerd Font", weight = "Regular" }),
 		},
 },
 
