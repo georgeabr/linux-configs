@@ -71,11 +71,18 @@ set statusline+=%m%r%h%w
 " 3. File type (syntax) shown within square brackets
 set statusline+=\ [%Y]
 
-" 4. Additional hex info (if needed) in square brackets; adjust or remove if unwanted
+" 4. Character under cursor in hexadecimal code
 set statusline+=\ [0x%02.2B]
 
 " 5. A truncation indicator if the statusline becomes too long
 set statusline+=%<
+
+" File encoding (UTF-8)
+set statusline+=\ [%{&fileencoding}]
+
+" End of line type
+set statusline+=\ EOL:\ [%{&ff}]
+
 
 " 6. The full file name (if space permits)
 set statusline+=\ %F
@@ -114,10 +121,10 @@ set hlsearch
 " -----------------------------------------------------------------------------
 " Key Mappings for Easier Window Navigation
 " Use Ctrl-h/j/k/l to move between splits
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
+"nnoremap <C-h> <C-w>h
+"nnoremap <C-j> <C-w>j
+"nnoremap <C-k> <C-w>k
+"nnoremap <C-l> <C-w>l
 
 " =============================================================================
 " End of .vimrc
