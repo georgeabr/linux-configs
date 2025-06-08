@@ -17,44 +17,40 @@ return {
         hide_tab_bar_if_only_one_tab = true,
 --        color_scheme = 'Builtin Dark',
 --	color_scheme = 'Muse (terminal.sexy)',
-	colors = {
-  		foreground = 'silver',
--- The default background color
-                background = 'black',
-                cursor_fg = 'black',
-                cursor_bg = 'silver',
-                  ansi = {
-                    'black',
-                    'maroon',
-                    '#006200',
-                    'olive',
---                  'steelblue',
---                  'darkslateblue',
-                    '#1b3246',
---                  'slateblue',
-                    '#8b008b',
-                    'teal',
-                    'silver',
-                  },
-                  brights = {
-                    'grey',
-                    'firebrick',
-                    'silver',
-                    'yellow',
-                    'dimgray',
-                    '#b081b0',
---                  'cornflowerblue',
-                    '#2e2e93',
-                    'silver'
-                  },
-	},
+colors = {
+    foreground = '#c0c0c0',  -- Light silver for better readability
+    background = '#121212',  -- Slightly softened black to reduce eye strain
+    cursor_fg = '#ffffff',   -- White cursor foreground for visibility
+    cursor_bg = '#c0c0c0',   -- Light silver cursor background
+
+    ansi = {
+        '#000000',  -- Black
+        '#b22222',  -- Firebrick (richer red)
+        '#008000',  -- Standard dark green
+        '#b8860b',  -- Dark goldenrod (warmer olive)
+        '#4682b4',  -- Steel blue (balanced blue)
+        '#8a2be2',  -- Blue violet (deep purple)
+        '#20b2aa',  -- Light sea green (refined teal)
+        '#c0c0c0',  -- Silver (neutral gray)
+    },
+
+    brights = {
+        '#808080',  -- Grey (softer bright black)
+        '#ff4500',  -- Orange red (vibrant red)
+        '#32cd32',  -- Lime green (brighter green)
+        '#ffd700',  -- Gold (warmer yellow)
+        '#696969',  -- Dim gray (muted dark gray)
+        '#da70d6',  -- Orchid (softer purple)
+        '#4169e1',  -- Royal blue (stronger blue)
+        '#ffffff'   -- White (true bright white)
+    },
+},
         default_cursor_style = 'SteadyUnderline',
         window_decorations = "NONE",
---		font = wezterm.font 'Iosevka Extended', font_size = 12,
+		-- font = wezterm.font 'Iosevka Extended', font_size = 12,
        		-- font = wezterm.font 'Pragmata Pro', font_size = 13,
-                -- font = wezterm.font 'Cousine Nerd Font', font_size = 13,
-		-- font = wezterm.font 'SF Mono', font_size = 12,
-		font = wezterm.font 'Noto Sans Mono', font_size = 13,
+--		font = wezterm.font 'Noto Sans Mono', font_size = 13,
+		font = wezterm.font 'Cousine Nerd Font', font_size = 13,
 
 
     keys = {
@@ -78,15 +74,14 @@ return {
 	font_rules = {
   		{
 		intensity = "Bold",
---		font = wezterm.font({ family = "Iosevka Extended", weight = "Regular"}),
-		font = wezterm.font({ family = "Noto Sans Mono", weight = "Regular" }),
---		font = wezterm.font({ family = "IBM Plex Mono", weight = "Regular" }),
+		-- font = wezterm.font({ family = "Iosevka Extended", weight = "Regular"}),
+		-- font = wezterm.font({ family = "IBM Plex Mono", weight = "Regular" }),
 		 -- font = wezterm.font({ family = "PragmataPro", weight = "Regular" }),
-		-- font = wezterm.font({ family = "SF Mono", weight = "Regular" }),
-		-- font = wezterm.font({ family = "Noto Sans Mono", weight = "Regular" }),
-		-- font = wezterm.font({ family = "Cousine Nerd Font", weight = "Regular" }),
+--		font = wezterm.font({ family = "Noto Sans Mono", weight = "Regular" }),
+		font = wezterm.font({ family = "Cousine Nerd Font", weight = "Regular" }),
 		},
 },
 
 }
+
 
