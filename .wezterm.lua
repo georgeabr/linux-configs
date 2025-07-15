@@ -17,6 +17,10 @@ return {
         hide_tab_bar_if_only_one_tab = true,
 --        color_scheme = 'Builtin Dark',
 --	color_scheme = 'Muse (terminal.sexy)',
+
+       -- disable system bell (audible + visual)
+       audible_bell     = "Disabled",
+       enable_visual_bell = false,	
 colors = {
     foreground = '#c0c0c0',  -- Light silver for better readability
     background = '#121212',  -- Slightly softened black to reduce eye strain
