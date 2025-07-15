@@ -22,7 +22,7 @@ return {
        audible_bell     = "Disabled",
 colors = {
     foreground = '#c0c0c0',  -- Light silver for better readability
-    background = '#121212',  -- Slightly softened black to reduce eye strain
+    background = '#0d0d0d',  -- Slightly softened black to reduce eye strain
     cursor_fg = '#ffffff',   -- White cursor foreground for visibility
     cursor_bg = '#c0c0c0',   -- Light silver cursor background
 
