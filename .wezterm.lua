@@ -15,11 +15,9 @@ end)
 return {
         check_for_updates = false,
         hide_tab_bar_if_only_one_tab = true,
+	audible_bell = "Disabled",
 --        color_scheme = 'Builtin Dark',
 --	color_scheme = 'Muse (terminal.sexy)',
-
-       -- disable system bell (audible + visual)
-       audible_bell     = "Disabled",
 colors = {
     foreground = '#c0c0c0',  -- Light silver for better readability
     background = '#0d0d0d',  -- Slightly softened black to reduce eye strain
@@ -49,10 +47,14 @@ colors = {
     },
 },
         default_cursor_style = 'SteadyUnderline',
+	inactive_pane_hsb = {
+    		saturation = 0.3,   -- adjust to match your foreground better
+	    	brightness = 0.8,   -- tweak to tone down inactive elements
+  	},
         window_decorations = "NONE",
 		-- font = wezterm.font 'Iosevka Extended', font_size = 12,
        		-- font = wezterm.font 'Pragmata Pro', font_size = 13,
---		font = wezterm.font 'Noto Sans Mono', font_size = 13,
+	-- font = wezterm.font 'Noto Sans Mono', font_size = 13,
 		font = wezterm.font 'Cousine Nerd Font', font_size = 13,
 
 
