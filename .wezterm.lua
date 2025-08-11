@@ -15,7 +15,8 @@ end)
 return {
         check_for_updates = false,
         hide_tab_bar_if_only_one_tab = true,
-	audible_bell = "Disabled",
+		audible_bell = "Disabled",
+		warn_about_missing_glyphs = false,
 --        color_scheme = 'Builtin Dark',
 --	color_scheme = 'Muse (terminal.sexy)',
 colors = {
