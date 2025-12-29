@@ -28,7 +28,8 @@ set list
 "   eol: End-of-line marker, tab: Tabs, trail: Trailing spaces,
 "   extends: When text goes off to the right, precedes: off to the left,
 "   space: visible space, nbsp: non-breaking space.
-set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣,nbsp:.
+"   disabled for now, as it distracts
+" set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣,nbsp:.
 
 " Enable dynamic window title based on the file being edited
 set title
