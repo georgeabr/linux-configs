@@ -23,7 +23,8 @@ set number
 set relativenumber
 
 " Show normally invisible characters (for example, tabs, trailing spaces, etc.)
-set list
+" disabled for now
+" set list
 " Customize the symbols used for invisible characters:
 "   eol: End-of-line marker, tab: Tabs, trail: Trailing spaces,
 "   extends: When text goes off to the right, precedes: off to the left,
