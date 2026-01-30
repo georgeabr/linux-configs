@@ -86,10 +86,14 @@ workspace_layout tabbed
 
 
 # export runtime vars into systemd user env if systemd user is present
-exec_always sh -c 'if command -v systemctl >/dev/null 2>&1 && systemctl --user show-environment >/dev/null 2>&1; then systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME || true; fi'
+exec_always sh -c 'if command -v systemctl >/dev/null 2>&1 \
+	&& systemctl --user show-environment >/dev/null 2>&1; then systemctl --user import-environment \
+	WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOaR_THEME || true; fi'
 
 # update classic dbus activation environment if present
-exec_always sh -c 'if command -v dbus-update-activation-environment >/dev/null 2>&1; then dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME || true; fi'
+exec_always sh -c 'if command -v dbus-update-activation-environment >/dev/null 2>&1; \
+	then dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY \
+	XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME || true; fi'
 
 
 
