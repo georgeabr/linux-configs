@@ -84,6 +84,10 @@ workspace_layout tabbed
 # https://github.com/minus7/redshift/tree/wayland
 # https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
 
+# add the line below to ~/.local/share/wayland-sessions/sway.desktop
+# Exec=env XDG_CURRENT_DESKTOP=sway:wlroots sway
+# reboot if necessary
+# test with - https://mozilla.github.io/webrtc-landing/gum_test.html
 
 # export runtime vars into systemd user env if systemd user is present
 exec_always sh -c 'if command -v systemctl >/dev/null 2>&1 \
