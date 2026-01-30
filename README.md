@@ -31,7 +31,7 @@ https://www.calcurse.org/
 - `mod+w` - will put all the windows into a set of tabs
 - `mod+s` - will put all the windows into a stack
 - `mod+e` - will put everything back
-- 'mod+tab` - task switcher  
+- `mod+tab` - task switcher  
 ## Useful shortcuts for `i3`
 - `mod+f11` -  show system menu (lock, logout, suspend, reboot, shutdown)  
 
