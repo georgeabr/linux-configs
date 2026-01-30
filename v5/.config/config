@@ -1,0 +1,309 @@
+input type:keyboard {
+    xkb_layout gb,ro
+    xkb_numlock on
+    xkb_options grp:alt_shift_toggle
+}
+
+
+# grayscale antialiasing for sway bars
+output * subpixel none
+output * bg #131313 solid_color
+# output eDP-1 disable
+
+output eDP-1 res 1920x1080 pos 0 0 scale 1.25
+output DP-1 res 1920x1080 pos 1920 0 scale 1.10
+
+set $mod Mod4
+
+client.focused          #444444 #0d0d0d #ffffff #292d2e   #444444 
+client.focused_inactive #1a1a1a #000000 #adadad #000000   #1a1a1a
+client.unfocused        #1a1a1a #222222 #adadad #292D2E   #222222
+client.urgent           #2F343A #900000 #FFFFFF #900000   #900000
+client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
+client.background       #FFFFFF
+
+set $my_cursor_size 36
+set $my_cursor_theme Hackneyed-Dark
+seat * xcursor_theme $my_cursor_theme $my_cursor_size
+
+exec_always {
+    gsettings set org.gnome.desktop.interface cursor-theme $my_cursor_theme
+    gsettings set org.gnome.desktop.interface cursor-size $my_cursor_size
+    gsettings set org.gnome.desktop.interface cursor-blink false
+#    killall kanshi; kanshi
+#    /usr/lib/polkit-kde-authentication-agent-1
+#for VirtualBox to use the dark theme
+#    /usr/libexec/gsd-xsettings
+}
+
+# exec --no-startup-id /usr/libexec/gsd-xsettings
+
+exec swayidle -w \
+    timeout 300 'swaymsg "output * power off"' \
+    resume 'swaymsg "output * power on"'
+
+# exec swayidle timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
+#        before-sleep 'swaylock -c 000000'
+
+# these work with sway
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') -5%
+bindsym XF86AudioMute exec pactl set-sink-mute $(pacmd list-sinks |awk '/* index:/{print $3}') toggle
+
+# play/pause audio # package name - playerctl
+bindsym XF86AudioPlay exec playerctl play-pause
+
+#for display brightness
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+
+#show calendar
+bindsym $mod+c exec zenity --calendar
+
+# for screenshots in wayland, use grim, add timestamp to png files
+# bindsym Print exec grim screenshot.png
+# bindsym Print exec grim screenshot-$(date "+%Y.%m.%d-%H.%M.%S").png
+
+# #Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:Input Mono Regular 10
+#font pango:SF Mono 9
+
+
+# for_window [app_id=all] move workspace prev
+titlebar_padding 1 1
+# default_border none
+gaps outer 0
+gaps inner 0
+hide_edge_borders --i3 smart
+workspace_layout tabbed
+
+
+#Startup applications
+# git clone the below redshift, for wayland support
+# https://github.com/minus7/redshift/tree/wayland
+
+# https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY=wayland-1 XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment DISPLAY
+# exec swayidle -w                                                 \
+#    timeout 120  'swaylock'                                      \
+#    timeout  20  'pgrep swaylock && swaymsg "output * dpms off"' \
+#         resume  'swaymsg "output * dpms on"'                    \
+#    before-sleep 'swaylock'
+
+
+#exec redshift -r -t 3700:3400
+# exec --no-startup-id gammastep -t 3800:3800 -r -l 54.97:1.61 -m wayland
+# exec --no-startup-id kanshi
+# numlockx does not work in Wayland, use "xkb_numlock on" in the input section
+# exec --no-startup-id numlockx on
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# swaymsg -t get_tree
+# class works for xwayland apps
+# for_window [class="zoom "] floating enable
+# for_window [class="Microsoft Teams - Insiders"] floating enable
+# for_window [app_id=*] titlebar hide
+
+# wayland vesion
+for_window [app_id="firefox"] inhibit_idle fullscreen
+
+# start a terminal
+#bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec kitty
+
+# kill focused window
+#bindsym $mod+Shift+q kill
+bindsym $mod+q kill
+
+# you need grim, wl-copy, grimshot
+bindsym $mod+Shift+Print exec wl-copy < $(grimshot save area "$(xdg-user-dir)/Pictures/Screenshots/Screenshot_$(date +%Y%m%d_%H%M%S).png")
+
+bindsym $mod+d exec wofi --show drun
+
+# window id, workspace id - [ 23] My Documents - LibreOffice
+# set $switch_logic swaymsg -t get_tree | jq -r '.. | select(.type? == "con" or .type? == "floating_con") | select(.name != null) | "[\( (\"   \" + (.id | tostring))[-3:] )] \(.name)"' | wofi --show dmenu -i --prompt "Switch to:" | grep -oP '\[\s*\K[^\]]+' | xargs -I{} swaymsg "[con_id={}] focus"
+
+# window id, workspace id, window name - [ 23] <1:Work> My Documents - LibreOffice
+# set $switch_logic swaymsg -t get_tree | jq -r '.nodes[].nodes[] | select(.type == "workspace") as $ws | .. | select(.type? == "con" or .type? == "floating_con") | select(.name != null) | "[\( ("   " + (.id | tostring))[-3:] )] <\($ws.name)> \(.name)"' | wofi --show dmenu -i --prompt "Switch to:" | grep -oP '\[\s*\K[^\]]+' | xargs -I{} swaymsg "[con_id={}] focus"
+
+# [eDP-1] <1:Web> Firefox [id:42]
+set $switch_logic swaymsg -t get_tree | jq -r '.nodes[] as $out | $out.nodes[] | select(.type == "workspace") as $ws | .. | select(.type? == "con" or .type? == "floating_con") | select(.name != null) | "[\( ($out.name + "     ")[:5] )] <\($ws.name)> \(.name) [id:\(.id)]"' | wofi --show dmenu -i --prompt "Switch to:" | grep -oP '\[id:\K[^\]]+' | xargs -I{} swaymsg "[con_id={}] focus"
+
+
+bindsym $mod+Tab exec $switch_logic
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+# bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 " 1 "
+set $ws2 " 2 "
+set $ws3 " 3 "
+set $ws4 " 4 "
+set $ws5 " 5 "
+set $ws6 " 6 "
+set $ws7 " 7 "
+set $ws8 " 8 "
+set $ws9 " 9 "
+set $ws10 " 10 "
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+
+
+set $prompt_msg  \tWhat is your wish?
+
+set $lock_cmd swaylock -f -c c68c53 -l \
+	--font-size 48 --indicator-radius 120 \
+	--indicator-thickness 30
+
+set $suspend_cmd systemctl suspend
+
+set $lock_suspend $lock_cmd && $suspend_cmd
+
+set $kill_snag killall swaynag
+
+bindsym $mod+l exec $lock_cmd
+
+bindsym $mod+Shift+e exec "swaynag \
+	--font 'Input Mono Regular 16' \
+	--background ccbd89 \
+	--button-padding 2 \
+	-t warning \
+	-m \'$prompt_msg\' \
+	-B 'Do nothing' \'$kill_snag\' \
+	-B 'Suspend session' \'$lock_suspend; $kill_snag\' \
+	-B 'Reload sway' \'swaymsg reload; $kill_snag\' \
+	-B 'Leave sway' 'swaymsg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+  colors {
+    background #1A1A1A
+    background #000000
+    statusline #FFFFFF
+    separator  #666666
+    height 16
+    mode hide
+    position top
+
+#    focused_workspace  #99935E #251A10 #FFFFFF
+    focused_workspace  #333333 #333333 #FFFFFF
+#    active_workspace   #333333 #222222 #FFFFFF
+    active_workspace   #333333 #333333 #D1D1D1
+    inactive_workspace #333333 #222222 #888888
+    urgent_workspace   #2f343a #900000 #FFFFFF
+    binding_mode       #2F343A #900000 #FFFFFF
+  }
+#        status_command i3status
+#        status_command .config/i3/weather.sh
+	status_command ~/.config/sway/status.sh
+}
