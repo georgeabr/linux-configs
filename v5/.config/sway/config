@@ -82,11 +82,17 @@ workspace_layout tabbed
 #Startup applications
 # git clone the below redshift, for wayland support
 # https://github.com/minus7/redshift/tree/wayland
-
 # https://github.com/swaywm/sway/wiki#gtk-applications-take-20-seconds-to-start
-exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY=wayland-1 XDG_CURRENT_DESKTOP=sway
-exec dbus-update-activation-environment DISPLAY
+
+
+# export runtime vars into systemd user env if systemd user is present
+exec_always sh -c 'if command -v systemctl >/dev/null 2>&1 && systemctl --user show-environment >/dev/null 2>&1; then systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME || true; fi'
+
+# update classic dbus activation environment if present
+exec_always sh -c 'if command -v dbus-update-activation-environment >/dev/null 2>&1; then dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME || true; fi'
+
+
+
 # exec swayidle -w                                                 \
 #    timeout 120  'swaylock'                                      \
 #    timeout  20  'pgrep swaylock && swaymsg "output * dpms off"' \
