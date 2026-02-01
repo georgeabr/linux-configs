@@ -1,7 +1,10 @@
 // intellibar.cpp
 // Fully featured, ultra-lean swaybar status command
-// FIXED: Keyboard detection now skips "null" layouts from dummy devices (Power/Lid) 
-// and grabs the first actual layout string found.
+// - Fixed-width fields for stable layout
+// - EINTR-safe file reads
+// - Robust sway IPC (partial I/O + little-endian packing)
+// - Persistent PulseAudio connection using pa_threaded_mainloop
+// - Default sink resolution, short cache, and timeouts
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -16,6 +19,7 @@
 #include <stdint.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <errno.h>
 
 #include <pulse/pulseaudio.h>
 
@@ -32,9 +36,22 @@ struct StatusData {
 static void read_file(const char *path, char *buf, size_t buflen) {
     int fd = open(path, O_RDONLY);
     if (fd < 0) { buf[0] = '\0'; return; }
-    ssize_t n = read(fd, buf, buflen - 1);
-    if (n < 0) n = 0;
-    buf[n] = '\0';
+
+    size_t off = 0;
+    while (off + 1 < buflen) {
+        ssize_t n = read(fd, buf + off, (ssize_t)(buflen - 1 - off));
+        if (n > 0) {
+            off += (size_t)n;
+            if (off + 1 >= buflen) break;
+            continue;
+        } else if (n == 0) {
+            break;
+        } else {
+            if (errno == EINTR) continue;
+            break;
+        }
+    }
+    buf[off] = '\0';
     close(fd);
 }
 
@@ -205,7 +222,7 @@ static void get_temp(char *out, size_t outlen) {
         }
     }
     if (max_temp <= 0) snprintf(out, outlen, "N/A");
-    else snprintf(out, outlen, "%d°C", max_temp);
+    else snprintf(out, outlen, "%3d°C", max_temp);
 }
 
 /* ---------- Battery via /sys ---------- */
@@ -238,91 +255,250 @@ static void get_battery(char *out, size_t outlen) {
     snprintf(out, outlen, "%s %s", state, perc);
 }
 
-/* ---------- Audio via libpulse ---------- */
+/* ---------- Audio via libpulse (persistent threaded mainloop, default sink, cache, timeouts) ---------- */
+
+#define PA_CACHE_TTL_SEC 2
+#define PA_OP_TIMEOUT_MS 400
+#define PA_INIT_TIMEOUT_MS 2000
+#define PA_SERVERINFO_TIMEOUT_MS 500
+
+static struct {
+    pa_threaded_mainloop *ml;
+    pa_context *ctx;
+    int initialized;
+    char default_sink[256];
+    char cached_vol[16];
+    time_t cached_at;
+} pa_handle = { NULL, NULL, 0, {0}, "0%%", 0 };
 
 struct pa_vol_ctx {
     int done;
     char vol[16];
 };
 
+/* callbacks: mainloop lock is already held by PulseAudio when these run */
+
+static void pa_state_cb(pa_context *c, void *userdata) {
+    (void)c;
+    pa_threaded_mainloop *ml = (pa_threaded_mainloop *)userdata;
+    pa_threaded_mainloop_signal(ml, 0);
+}
+
+static void pa_server_info_cb(pa_context *c, const pa_server_info *i, void *userdata) {
+    (void)c;
+    pa_threaded_mainloop *ml = (pa_threaded_mainloop *)userdata;
+    if (i && i->default_sink_name) {
+        strncpy(pa_handle.default_sink, i->default_sink_name,
+                sizeof(pa_handle.default_sink) - 1);
+        pa_handle.default_sink[sizeof(pa_handle.default_sink) - 1] = '\0';
+    }
+    pa_threaded_mainloop_signal(ml, 0);
+}
+
 static void pa_sink_info_cb(pa_context *c, const pa_sink_info *i, int eol, void *userdata) {
     (void)c;
+    struct pa_vol_ctx *ctx = (struct pa_vol_ctx *)userdata;
+
     if (eol > 0 || !i) {
-        struct pa_vol_ctx *ctx = (struct pa_vol_ctx *)userdata;
         if (!ctx->done) {
             snprintf(ctx->vol, sizeof(ctx->vol), "0%%");
             ctx->done = 1;
         }
+        pa_threaded_mainloop_signal(pa_handle.ml, 0);
         return;
     }
-    struct pa_vol_ctx *ctx = (struct pa_vol_ctx *)userdata;
-    if (ctx->done) return;
 
-    pa_volume_t v = pa_cvolume_avg(&i->volume);
-    int pct = (int)((100 * (long long)v) / PA_VOLUME_NORM);
-    if (pct < 0) pct = 0;
-    if (pct > 150) pct = 150;
-    snprintf(ctx->vol, sizeof(ctx->vol), "%d%%", pct);
-    ctx->done = 1;
-}
-
-static void pa_state_cb(pa_context *c, void *userdata) {
-    (void)userdata;
-    pa_context_state_t st = pa_context_get_state(c);
-    if (st == PA_CONTEXT_FAILED || st == PA_CONTEXT_TERMINATED) {
-        // nothing, mainloop will exit
+    if (!ctx->done) {
+        pa_volume_t v = pa_cvolume_avg(&i->volume);
+        int pct = (int)((100 * (long long)v) / PA_VOLUME_NORM);
+        if (pct < 0) pct = 0;
+        if (pct > 150) pct = 150;
+        snprintf(ctx->vol, sizeof(ctx->vol), "%d%%", pct);
+        ctx->done = 1;
     }
+    pa_threaded_mainloop_signal(pa_handle.ml, 0);
 }
 
+static void fini_pulseaudio(void) {
+    if (!pa_handle.initialized) return;
+    pa_threaded_mainloop_lock(pa_handle.ml);
+    pa_context_disconnect(pa_handle.ctx);
+    pa_threaded_mainloop_unlock(pa_handle.ml);
+
+    pa_threaded_mainloop_stop(pa_handle.ml);
+    pa_context_unref(pa_handle.ctx);
+    pa_threaded_mainloop_free(pa_handle.ml);
+
+    pa_handle.ctx = NULL;
+    pa_handle.ml = NULL;
+    pa_handle.initialized = 0;
+    pa_handle.default_sink[0] = '\0';
+    pa_handle.cached_vol[0] = '\0';
+    pa_handle.cached_at = 0;
+}
+
+static int init_pulseaudio(void) {
+    if (pa_handle.initialized) return 0;
+
+    pa_handle.ml = pa_threaded_mainloop_new();
+    if (!pa_handle.ml) return -1;
+
+    pa_mainloop_api *api = pa_threaded_mainloop_get_api(pa_handle.ml);
+    pa_handle.ctx = pa_context_new(api, "intellibar");
+    if (!pa_handle.ctx) {
+        pa_threaded_mainloop_free(pa_handle.ml);
+        pa_handle.ml = NULL;
+        return -1;
+    }
+
+    pa_context_set_state_callback(pa_handle.ctx, pa_state_cb, pa_handle.ml);
+
+    if (pa_threaded_mainloop_start(pa_handle.ml) != 0) {
+        pa_context_unref(pa_handle.ctx);
+        pa_threaded_mainloop_free(pa_handle.ml);
+        pa_handle.ctx = NULL;
+        pa_handle.ml = NULL;
+        return -1;
+    }
+
+    pa_threaded_mainloop_lock(pa_handle.ml);
+    if (pa_context_connect(pa_handle.ctx, NULL, PA_CONTEXT_NOFLAGS, NULL) < 0) {
+        pa_threaded_mainloop_unlock(pa_handle.ml);
+        pa_threaded_mainloop_stop(pa_handle.ml);
+        pa_context_unref(pa_handle.ctx);
+        pa_threaded_mainloop_free(pa_handle.ml);
+        pa_handle.ctx = NULL;
+        pa_handle.ml = NULL;
+        return -1;
+    }
+
+    struct timespec start;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (;;) {
+        pa_context_state_t st = pa_context_get_state(pa_handle.ctx);
+        if (st == PA_CONTEXT_READY) break;
+        if (st == PA_CONTEXT_FAILED || st == PA_CONTEXT_TERMINATED) {
+            pa_threaded_mainloop_unlock(pa_handle.ml);
+            pa_threaded_mainloop_stop(pa_handle.ml);
+            pa_context_unref(pa_handle.ctx);
+            pa_threaded_mainloop_free(pa_handle.ml);
+            pa_handle.ctx = NULL;
+            pa_handle.ml = NULL;
+            return -1;
+        }
+        struct timespec now;
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        long elapsed_ms = (now.tv_sec - start.tv_sec) * 1000 +
+                          (now.tv_nsec - start.tv_nsec) / 1000000;
+        if (elapsed_ms >= PA_INIT_TIMEOUT_MS) {
+            fprintf(stderr, "intellibar: pulseaudio init timeout\n");
+            pa_threaded_mainloop_unlock(pa_handle.ml);
+            pa_threaded_mainloop_stop(pa_handle.ml);
+            pa_context_unref(pa_handle.ctx);
+            pa_threaded_mainloop_free(pa_handle.ml);
+            pa_handle.ctx = NULL;
+            pa_handle.ml = NULL;
+            return -1;
+        }
+        pa_threaded_mainloop_wait(pa_handle.ml);
+    }
+
+    pa_threaded_mainloop_unlock(pa_handle.ml);
+
+    atexit(fini_pulseaudio);
+    pa_handle.initialized = 1;
+    return 0;
+}
+
+/* refresh default sink name (used when cache is stale) */
+static void refresh_default_sink(void) {
+    if (!pa_handle.initialized || !pa_handle.ml) return;
+
+    pa_operation *op = NULL;
+    struct timespec start;
+
+    pa_threaded_mainloop_lock(pa_handle.ml);
+    pa_handle.default_sink[0] = '\0';
+
+    op = pa_context_get_server_info(pa_handle.ctx, pa_server_info_cb, pa_handle.ml);
+    if (!op) {
+        pa_threaded_mainloop_unlock(pa_handle.ml);
+        return;
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    while (pa_operation_get_state(op) == PA_OPERATION_RUNNING &&
+           pa_handle.default_sink[0] == '\0') {
+        struct timespec now;
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        long elapsed_ms = (now.tv_sec - start.tv_sec) * 1000 +
+                          (now.tv_nsec - start.tv_nsec) / 1000000;
+        if (elapsed_ms >= PA_SERVERINFO_TIMEOUT_MS) break;
+        pa_threaded_mainloop_wait(pa_handle.ml);
+    }
+    pa_operation_unref(op);
+    pa_threaded_mainloop_unlock(pa_handle.ml);
+}
+
+/* get_audio: short cache, refresh default sink on cache miss, timeout per op */
 static void get_audio(char *out, size_t outlen) {
-    pa_mainloop *ml = pa_mainloop_new();
-    if (!ml) { snprintf(out, outlen, "0%%"); return; }
+    time_t now = time(NULL);
 
-    pa_mainloop_api *api = pa_mainloop_get_api(ml);
-    pa_context *ctx = pa_context_new(api, "intellibar");
-    if (!ctx) {
-        pa_mainloop_free(ml);
+    if (pa_handle.cached_at != 0 &&
+        now - pa_handle.cached_at <= PA_CACHE_TTL_SEC &&
+        pa_handle.cached_vol[0]) {
+        snprintf(out, outlen, "%4s", pa_handle.cached_vol);
+        return;
+    }
+
+    if (init_pulseaudio() != 0) {
         snprintf(out, outlen, "0%%");
         return;
     }
 
-    pa_context_set_state_callback(ctx, pa_state_cb, NULL);
-    if (pa_context_connect(ctx, NULL, PA_CONTEXT_NOFLAGS, NULL) < 0) {
-        pa_context_unref(ctx);
-        pa_mainloop_free(ml);
-        snprintf(out, outlen, "0%%");
-        return;
-    }
-
-    int ready = 0;
-    while (!ready) {
-        int r;
-        if (pa_mainloop_iterate(ml, 1, &r) < 0) break;
-        pa_context_state_t st = pa_context_get_state(ctx);
-        if (st == PA_CONTEXT_READY) ready = 1;
-        if (st == PA_CONTEXT_FAILED || st == PA_CONTEXT_TERMINATED) break;
-    }
+    refresh_default_sink();
 
     struct pa_vol_ctx vctx;
     vctx.done = 0;
     snprintf(vctx.vol, sizeof(vctx.vol), "0%%");
 
-    if (ready) {
-        pa_operation *op = pa_context_get_sink_info_by_index(ctx, PA_INVALID_INDEX, pa_sink_info_cb, &vctx);
-        if (op) {
-            while (!vctx.done) {
-                int r;
-                if (pa_mainloop_iterate(ml, 1, &r) < 0) break;
-            }
-            pa_operation_unref(op);
-        }
+    pa_operation *op = NULL;
+    struct timespec start;
+
+    pa_threaded_mainloop_lock(pa_handle.ml);
+    if (pa_handle.default_sink[0]) {
+        op = pa_context_get_sink_info_by_name(pa_handle.ctx,
+                                              pa_handle.default_sink,
+                                              pa_sink_info_cb, &vctx);
+    } else {
+        op = pa_context_get_sink_info_list(pa_handle.ctx,
+                                           pa_sink_info_cb, &vctx);
     }
 
-    pa_context_disconnect(ctx);
-    pa_context_unref(ctx);
-    pa_mainloop_free(ml);
+    if (op) {
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        while (pa_operation_get_state(op) == PA_OPERATION_RUNNING &&
+               !vctx.done) {
+            struct timespec nowts;
+            clock_gettime(CLOCK_MONOTONIC, &nowts);
+            long elapsed_ms = (nowts.tv_sec - start.tv_sec) * 1000 +
+                              (nowts.tv_nsec - start.tv_nsec) / 1000000;
+            if (elapsed_ms >= PA_OP_TIMEOUT_MS) {
+                pa_operation_cancel(op);
+                break;
+            }
+            pa_threaded_mainloop_wait(pa_handle.ml);
+        }
+        pa_operation_unref(op);
+    }
 
-    snprintf(out, outlen, "%4s", vctx.vol);
+    strncpy(pa_handle.cached_vol, vctx.vol, sizeof(pa_handle.cached_vol) - 1);
+    pa_handle.cached_vol[sizeof(pa_handle.cached_vol) - 1] = '\0';
+    pa_handle.cached_at = time(NULL);
+
+    pa_threaded_mainloop_unlock(pa_handle.ml);
+
+    snprintf(out, outlen, "%4s", pa_handle.cached_vol);
 }
 
 /* ---------- Keyboard layout via sway IPC ---------- */
@@ -335,7 +511,6 @@ struct sway_ipc_header {
 
 #define I3_IPC_MESSAGE_TYPE_GET_INPUTS 100
 
-
 static int sway_ipc_request(char *buf, size_t buflen) {
     const char *sock = getenv("SWAYSOCK");
     if (!sock || !*sock) return -1;
@@ -346,59 +521,82 @@ static int sway_ipc_request(char *buf, size_t buflen) {
     struct sockaddr_un addr;
     memset(&addr, 0, sizeof(addr));
     addr.sun_family = AF_UNIX;
-    strncpy(addr.sun_path, sock, sizeof(addr.sun_path) - 1);
+    snprintf(addr.sun_path, sizeof(addr.sun_path), "%s", sock);
 
     if (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
         close(fd);
         return -1;
     }
 
-    // Build exact 14-byte header: "i3-ipc" + uint32 size + uint32 type
     unsigned char hdr[14];
     memcpy(hdr, "i3-ipc", 6);
-    uint32_t size = 0;
+    hdr[6] = hdr[7] = hdr[8] = hdr[9] = 0;
     uint32_t type = I3_IPC_MESSAGE_TYPE_GET_INPUTS;
-    memcpy(hdr + 6,  &size, 4);
-    memcpy(hdr + 10, &type, 4);
+    hdr[10] = (unsigned char)(type & 0xff);
+    hdr[11] = (unsigned char)((type >> 8) & 0xff);
+    hdr[12] = (unsigned char)((type >> 16) & 0xff);
+    hdr[13] = (unsigned char)((type >> 24) & 0xff);
 
-    if (write(fd, hdr, sizeof(hdr)) != (ssize_t)sizeof(hdr)) {
-        close(fd);
-        return -1;
+    size_t to_write = sizeof(hdr);
+    size_t off = 0;
+    while (to_write > 0) {
+        ssize_t w = write(fd, hdr + off, to_write);
+        if (w < 0) {
+            if (errno == EINTR) continue;
+            close(fd);
+            return -1;
+        }
+        off += (size_t)w;
+        to_write -= (size_t)w;
     }
 
-    // Read reply header (also 14 bytes)
     unsigned char rh[14];
-    ssize_t n = read(fd, rh, sizeof(rh));
-    if (n != (ssize_t)sizeof(rh)) {
-        close(fd);
-        return -1;
+    size_t need = sizeof(rh);
+    off = 0;
+    while (need > 0) {
+        ssize_t r = read(fd, rh + off, need);
+        if (r < 0) {
+            if (errno == EINTR) continue;
+            close(fd);
+            return -1;
+        } else if (r == 0) {
+            close(fd);
+            return -1;
+        }
+        off += (size_t)r;
+        need -= (size_t)r;
     }
+
     if (memcmp(rh, "i3-ipc", 6) != 0) {
         close(fd);
         return -1;
     }
 
-    uint32_t rsize;
-    memcpy(&rsize, rh + 6, 4);
+    uint32_t rsize = (uint32_t)rh[6] |
+                     ((uint32_t)rh[7] << 8) |
+                     ((uint32_t)rh[8] << 16) |
+                     ((uint32_t)rh[9] << 24);
 
-    size_t to_read = rsize;
+    size_t to_read = (size_t)rsize;
     if (to_read >= buflen) to_read = buflen - 1;
 
-    size_t off = 0;
+    off = 0;
     while (to_read > 0) {
-        n = read(fd, buf + off, to_read);
-        if (n <= 0) break;
-        off += (size_t)n;
-        to_read -= (size_t)n;
+        ssize_t r = read(fd, buf + off, to_read);
+        if (r < 0) {
+            if (errno == EINTR) continue;
+            break;
+        } else if (r == 0) break;
+        off += (size_t)r;
+        to_read -= (size_t)r;
     }
     buf[off] = '\0';
     close(fd);
     return (off > 0) ? 0 : -1;
 }
 
-
 static void get_kb(char *out, size_t outlen) {
-    static char buf[262144]; // 256 KB
+    static char buf[262144];
     if (sway_ipc_request(buf, sizeof(buf)) != 0) {
         snprintf(out, outlen, "??");
         return;
@@ -454,7 +652,6 @@ static void get_kb(char *out, size_t outlen) {
 
     snprintf(out, outlen, "%s", s);
 }
-
 
 /* ---------- stats thread ---------- */
 
@@ -524,3 +721,4 @@ int main() {
 
     return 0;
 }
+
