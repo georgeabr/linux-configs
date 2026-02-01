@@ -67,7 +67,7 @@ static void get_mem(char *out, size_t outlen) {
     }
     long long used_gib = (total - avail) / 1048576;
     long long total_gib = total / 1048576;
-    snprintf(out, outlen, "%lldGi/%lldGi", used_gib, total_gib);
+    snprintf(out, outlen, "%2lldGi/%2lldGi", used_gib, total_gib);
 }
 
 /* ---------- Disk ---------- */
@@ -80,7 +80,7 @@ static void get_disk(char *out, size_t outlen) {
     }
     long long avail = (long long)st.f_bavail * st.f_frsize / (1024LL * 1024LL * 1024LL);
     long long total = (long long)st.f_blocks * st.f_frsize / (1024LL * 1024LL * 1024LL);
-    snprintf(out, outlen, "%lldGi/%lldGi", avail, total);
+    snprintf(out, outlen, "%3lldGi/%3lldGi", avail, total);
 }
 
 /* ---------- CPU ---------- */
@@ -322,7 +322,7 @@ static void get_audio(char *out, size_t outlen) {
     pa_context_unref(ctx);
     pa_mainloop_free(ml);
 
-    snprintf(out, outlen, "%s", vctx.vol);
+    snprintf(out, outlen, "%4s", vctx.vol);
 }
 
 /* ---------- Keyboard layout via sway IPC ---------- */
