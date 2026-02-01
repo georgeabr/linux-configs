@@ -16,7 +16,15 @@ https://launchpad.net/~regolith-linux/+archive/ubuntu/release?field.series_filte
 
 ## Software needed for `sway`
 - `kanshi` `gammastep` `playerctl` `grim` `kitty`
-
+- custom bar - [intellibar.cpp](v5/.config/intellibar.cpp)
+    - run the below, modify `NET_IFACE` in the source file first
+  ```bash
+  g++ -std=c++17 -Os -fno-exceptions -fno-rtti \
+    -ffunction-sections -fdata-sections -Wl,--gc-sections \
+    -pthread intellibar.cpp -lpulse -o intellibar
+  strip --strip-all intellibar
+  ```
+    - add `status_command ~/intellibar` to `~/.config/sway/config` and `swaymsg reload`
 ## Useful software
 - nice mouse cursors  
 https://gitlab.com/Enthymeme/hackneyed-x11-cursors
