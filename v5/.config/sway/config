@@ -38,9 +38,21 @@ exec_always {
 
 # exec --no-startup-id /usr/libexec/gsd-xsettings
 
+# exec swayidle -w \
+#    timeout 300 'swaymsg "output * power off"' \
+#    resume 'swaymsg "output * power on"'
+
+# Current setup
+# timeout 300 'swaymsg "output * power off"'
+# resume 'swaymsg "output * power on"'
+
+# Better setup for newer wlroots stability
 exec swayidle -w \
     timeout 300 'swaymsg "output * power off"' \
-    resume 'swaymsg "output * power on"'
+        resume 'swaymsg "output * power on"'
+#	idbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway'
+
+# exec_always export WLR_DRM_NO_MODIFIERS=1
 
 # exec swayidle timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 #        before-sleep 'swaylock -c 000000'
@@ -90,16 +102,8 @@ workspace_layout tabbed
 # test with - https://mozilla.github.io/webrtc-landing/gum_test.html
 
 # export runtime vars into systemd user env if systemd user is present
-exec_always sh -c 'if command -v systemctl >/dev/null 2>&1 \
-	&& systemctl --user show-environment >/dev/null 2>&1; then systemctl --user import-environment \
-	WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOaR_THEME || true; fi'
-
-# update classic dbus activation environment if present
-exec_always sh -c 'if command -v dbus-update-activation-environment >/dev/null 2>&1; \
-	then dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY \
-	XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME || true; fi'
-
-
+exec systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME
+exec dbus-update-activation-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME
 
 # exec swayidle -w                                                 \
 #    timeout 120  'swaylock'                                      \
