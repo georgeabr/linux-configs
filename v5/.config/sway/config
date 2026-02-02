@@ -72,6 +72,9 @@ bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 #show calendar
 bindsym $mod+c exec zenity --calendar
 
+bindsym $mod+m exec pavucontrol
+for_window [app_id="pavucontrol"] floating enable
+
 # for screenshots in wayland, use grim, add timestamp to png files
 # bindsym Print exec grim screenshot.png
 # bindsym Print exec grim screenshot-$(date "+%Y.%m.%d-%H.%M.%S").png
@@ -321,7 +324,6 @@ bar {
     urgent_workspace   #2f343a #900000 #FFFFFF
     binding_mode       #2F343A #900000 #FFFFFF
   }
-#        status_command i3status
-#        status_command .config/i3/weather.sh
-	status_command ~/.config/sway/status.sh
+#	status_command stdbuf -oL ~/.config/sway/status.sh
+	status_command ~/intellibar
 }
