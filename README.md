@@ -40,6 +40,7 @@ https://www.calcurse.org/
 - `mod+s` - will put all the windows into a stack
 - `mod+e` - will put everything back
 - `mod+tab` - task switcher (using `wofi`)
+- `mod+m` - Audio input/output control (using `pavucontrol`)
 ## Useful shortcuts for `i3`
 - `mod+f11` -  show system menu (lock, logout, suspend, reboot, shutdown)  
 
